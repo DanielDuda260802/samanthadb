@@ -8,8 +8,6 @@ def format_db_name(name):
     return name
 
 def create_or_connect_database(db_name):
-    if not os.path.exists(db_name):
-        open(db_name, 'a').close()
     conn = sqlite3.connect(db_name)
     return conn
 
@@ -66,6 +64,11 @@ class DatabaseCLI(Cmd):
 
     def do_use(self, arg):
         db_name = arg + '.db'
+
+        if not os.path.exists(db_name):
+            print(f"{db_name} does not exist.")
+            return
+
         if db_name:
             self.database_name = db_name
             self.conn = create_or_connect_database(self.database_name)
