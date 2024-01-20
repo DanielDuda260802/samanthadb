@@ -1,0 +1,26 @@
+## scenario 1
+CREATE TABLE employees (id INTEGER PRIMARY KEY, name TEXT, department_id INTEGER);
+CREATE TABLE departments (id INTEGER PRIMARY KEY, name TEXT);
+
+INSERT INTO departments (id, name) VALUES (1, 'Engineering');
+INSERT INTO departments (id, name) VALUES (2, 'Human Resources');
+
+INSERT INTO employees (id, name, department_id) VALUES (1, 'Alice', 1);
+INSERT INTO employees (id, name, department_id) VALUES (2, 'Bob', 2);
+
+SELECT employees.name AS employee_name, departments.name AS department_name FROM employees JOIN departments ON employees.department_id = departments.id;
+
+
+## scenario 2
+CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, price REAL);
+
+INSERT INTO products (id, name, price) VALUES (1, 'Laptop', 1200.50);
+INSERT INTO products (id, name, price) VALUES (2, 'Phone', 299.99);
+
+SELECT * FROM products;
+
+UPDATE products SET price = 310.00 WHERE id = 2;
+
+DELETE FROM products WHERE id = 1;
+
+
