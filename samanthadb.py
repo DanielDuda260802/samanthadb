@@ -57,12 +57,13 @@ def execute_sql(conn, sql):
         print(f"Error executing query: error returned from database: {e}")
 
 class DatabaseCLI(Cmd):
-    intro = 'Welcome to the SamanthaDB CLI. Type help or ? to list commands.\n'
+    intro = 'Welcome to the SamanthaDB CLI. Type help or ? to list commands.\n\nWhen connected to a database, use standard SQLite queries to interact with the database.'
     database_name = 'None'
     prompt = f'\nSamanthaDB[{database_name}]> '
     conn = None
 
     def do_use(self, arg):
+        """ use [database_name]: Used to connect to a database (creates a database if it doesn't exist) """
         db_name = arg + '.db'
 
         if not os.path.exists(db_name):
@@ -78,14 +79,18 @@ class DatabaseCLI(Cmd):
             print("Invalid database name.")
 
     def do_create(self, arg):
+        """ create [database_name]: Creates a database (automatically connects to the database) """
         db_name = arg + '.db'
         if db_name:
+            self.database_name = db_name
             self.conn = create_or_connect_database(db_name)
-            print(f"Database '{db_name}' created.")
+            self.prompt = f'\nSamanthaDB[{self.database_name}]> '
+            print(f"Database '{db_name}' created.\nSuccessfully connected to {db_name}")
         else:
             print("Invalid database name.")
 
     def do_drop(self, arg):
+        """ drop [database_name]: Closes connection to a database and deletes it from file system """
         db_name = arg + '.db'
         if db_name:
             if self.conn:
@@ -103,12 +108,14 @@ class DatabaseCLI(Cmd):
             print("Invalid database name.")
 
     def do_show(self, arg):
+        """ show [tables]: Shows all tables within a database """
         if arg.lower() == 'tables' and self.conn:
             execute_sql(self.conn, "SELECT name FROM sqlite_master WHERE type='table';")
         else:
             print("No database selected or invalid command.")
 
     def do_exit(self, arg):
+        """ Closes connection to a database and exits the program """
         if self.conn:
             self.conn.close()
             print("Connection closed.")
